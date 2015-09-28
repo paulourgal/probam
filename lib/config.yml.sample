@@ -1,0 +1,20 @@
+github:
+  access_token: "TOKEN"
+
+  projects:
+    ancora:
+      repo: "repo_name"
+      milestone:
+        backlog: "Backlog"
+        sprint_nine: "Sprint 09"
+
+basecamp:
+  id: "ID_NUMBER"
+  username: "user@caiena.net"
+  password: "S3CR37"
+
+  projects:
+    ancora:
+      name: "Âncora"
+      todolist: "Product Backlog"
+

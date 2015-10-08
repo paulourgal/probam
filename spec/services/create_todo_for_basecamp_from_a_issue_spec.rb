@@ -21,8 +21,8 @@ describe CreateTodoForBasecampFromAIssue do
   let(:todo_list_name) { config["basecamp"]["projects"]["ancora"]["todolist"] }
   let(:todo_list) { FindBasecampTodoList.call(project, todo_list_name) }
 
-  let(:invalid_issue) { { number: nil, title: "title", body: "body" } }
-  let(:valid_issue) { { number: "123", title: "title", body: "body" } }
+  let(:invalid_issue) { { number: nil, title: "title", body: "body", labels: nil, assignee: nil } }
+  let(:valid_issue) { { number: "123", title: "title", body: "body", labels: nil, assignee: nil } }
 
   it 'responds to call' do
     expect(CreateTodoForBasecampFromAIssue).to respond_to(:call)

@@ -7,7 +7,7 @@ require "services/find_basecamp_todo_list"
 
 describe DeleteBasecampTodo do
 
-  let(:valid_issue) { { number: "123", title: "title", body: "body" } }
+  let(:valid_issue) { { number: "123", title: "title", body: "body", labels: nil, assignee: nil } }
 
   let(:config) { YAML.load_file("lib/config.yml") }
   let(:basecamp_id) { config["basecamp"]["id"] }

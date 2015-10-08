@@ -6,8 +6,8 @@ class Story
     id = github_issue[:number]
     title = github_issue[:title]
     comments = github_issue[:body]
-    assignee = github_issue[:assignee]
-    labels = github_issue[:labels]
+    assignee = github_issue[:assignee] if github_issue[:assignee]
+    labels = github_issue[:labels] if github_issue[:labels]
     return nil if id.nil? || title.nil?
     self.new(id, title, comments, assignee, labels)
   end
@@ -23,6 +23,7 @@ class Story
   end
 
   def labels_to_s
+    return "" unless labels
     labels_s = ""
     labels.each do |label|
       labels_s << "[#{label.name}]"

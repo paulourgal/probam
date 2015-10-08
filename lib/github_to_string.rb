@@ -20,7 +20,7 @@ github_access_token = github_config["access_token"]
 
 github_project = github_config["projects"]["ancora"]
 github_project_repo = github_project["repo"]
-github_project_milestone = github_project["milestone"]["sprint_nine"]
+github_project_milestone = github_project["milestone"]["sprint_ten"]
 
 # get issues from github
 
@@ -28,14 +28,13 @@ issues = GetIssuesFromGithub.call(
   github_access_token, github_project_repo, github_project_milestone, state
 )
 
-
 # creating string of issues
 
 string_of_issues = ""
 
 issues.each do |issue|
   story = Story.create_from_github_issue(issue)
-  string_of_issues += "[ ] " + story.to_s + "\n"
+  string_of_issues += "[ ] " + story.to_s + "\n\n"
 end
 
 puts string_of_issues

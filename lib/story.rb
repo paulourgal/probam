@@ -6,16 +6,28 @@ class Story
     id = github_issue[:number]
     title = github_issue[:title]
     comments = github_issue[:body]
+    assignee = github_issue[:assignee]
+    labels = github_issue[:labels]
     return nil if id.nil? || title.nil?
-    self.new(id, title, comments)
+    self.new(id, title, comments, assignee, labels)
   end
 
-  attr_accessor :id, :comments, :title
+  attr_accessor :id, :comments, :title, :assignee, :labels
 
-  def initialize(id, title, comments)
+  def initialize(id, title, comments, assignee, labels)
     @id = id
     @title = title
     @comments = comments
+    @assignee = assignee
+    @labels = labels
+  end
+
+  def labels_to_s
+    labels_s = ""
+    labels.each do |label|
+      labels_s << "[#{label.name}]"
+    end
+    labels_s
   end
 
   def has_comments?
@@ -34,8 +46,10 @@ class Story
   end
 
   def to_s
-    return "" if id.nil? || title.nil?
-    "#{id} - #{title}\n"
+    return "" unless id && title
+    s = "#{id} - #{title}"
+    s << " #{labels_to_s}" unless labels_to_s.empty?
+    s << " - #{assignee.login}" unless assignee.nil?
+    s
   end
-
 end

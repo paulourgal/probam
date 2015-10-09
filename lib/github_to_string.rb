@@ -26,7 +26,7 @@ puts "\n#{state.upcase} issues\n\n"
 
 # get open issues from github
 
-open_issues = GetIssuesFromGithub.call(
+issues = GetIssuesFromGithub.call(
   github_access_token, github_project_repo, github_project_milestone, state
 )
 
@@ -35,7 +35,7 @@ open_issues = GetIssuesFromGithub.call(
 string_of_issues = ""
 total_velocity = 0
 
-open_issues.each do |issue|
+issues.each do |issue|
   story = Story.create_from_github_issue(issue)
   total_velocity += story.velocity.to_i
   string_of_issues += "[ ] " + story.to_s + "\n\n"
@@ -52,7 +52,7 @@ puts "\n#{state.upcase} issues\n\n"
 
 # get closed issues from github
 
-closed_issues = GetIssuesFromGithub.call(
+issues = GetIssuesFromGithub.call(
   github_access_token, github_project_repo, github_project_milestone, state
 )
 
@@ -61,7 +61,7 @@ closed_issues = GetIssuesFromGithub.call(
 string_of_issues = ""
 total_velocity = 0
 
-closed_issues.each do |issue|
+issues.each do |issue|
   story = Story.create_from_github_issue(issue)
   total_velocity += story.velocity.to_i
   string_of_issues += "[ ] " + story.to_s + "\n\n"

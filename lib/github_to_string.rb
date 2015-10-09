@@ -20,40 +20,44 @@ github_project = github_config["projects"]["ancora"]
 github_project_repo = github_project["repo"]
 github_project_milestone = github_project["milestone"]["sprint_ten"]
 
-state = ARGV[0] || "open"
+situation = ARGV[0] || "open"
 
-puts "\n#{state.upcase} issues\n\n"
+puts "\n#{situation.upcase} issues\n\n"
 
 # get open issues from github
 
 issues = GetIssuesFromGithub.call(
-  github_access_token, github_project_repo, github_project_milestone, state
+  github_access_token, github_project_repo, github_project_milestone, situation
 )
 
-# creating string of issues
+["", "dev", "rev", "qa"].each do |state|
+  # creating string of issues
+  string_of_issues = ""
+  total_velocity = 0
 
-string_of_issues = ""
-total_velocity = 0
+  issues.each do |issue|
+    story = Story.create_from_github_issue(issue)
+    if state.nil? || story.current_status == state
+      total_velocity += story.velocity.to_i
+      string_of_issues += "[ ] " + story.to_s + "\n\n"
+    end
+  end
 
-issues.each do |issue|
-  story = Story.create_from_github_issue(issue)
-  total_velocity += story.velocity.to_i
-  string_of_issues += "[ ] " + story.to_s + "\n\n"
+  state = "TODO" if state == ""
+  puts "~~~ #{state.upcase}: #{total_velocity} velocities ~~~\n\n" unless
+    string_of_issues.empty?
+  puts string_of_issues
 end
+puts "\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n"
 
-puts string_of_issues
-puts "Velocity #{state.upcase}: #{total_velocity}\n"
+situation = "closed"
 
-puts "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-
-state = "closed"
-
-puts "\n#{state.upcase} issues\n\n"
+puts "\n#{situation.upcase} issues\n\n"
 
 # get closed issues from github
 
 issues = GetIssuesFromGithub.call(
-  github_access_token, github_project_repo, github_project_milestone, state
+  github_access_token, github_project_repo, github_project_milestone, situation
 )
 
 # creating string of issues
@@ -68,5 +72,5 @@ issues.each do |issue|
 end
 
 puts string_of_issues
-puts "Velocity #{state.upcase}: #{total_velocity}"
+puts "Velocity #{situation.upcase}: #{total_velocity}"
 

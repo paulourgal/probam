@@ -1,6 +1,7 @@
 require 'logan'
 
 class Story
+  STATUSES = ["[wip:rev]","[wip:rev]","[wip:qa]"]
 
   def self.create_from_github_issue(github_issue)
     id = github_issue[:number]
@@ -22,6 +23,13 @@ class Story
     @assignee = assignee
     @labels = labels
     @velocity = velocity
+  end
+
+  def current_status
+    return "dev" if labels_to_s["dev"]
+    return "rev" if labels_to_s["rev"]
+    return "qa" if labels_to_s["qa"]
+    ""
   end
 
   def labels_to_s
@@ -53,7 +61,6 @@ class Story
     s = "#{id} - #{title}"
     s << " #{labels_to_s}" unless labels_to_s.empty?
     s << " - #{assignee.login}" unless assignee.nil?
-    s << " - #{velocity} velocity" unless velocity.nil? || velocity == 0
     s
   end
 end

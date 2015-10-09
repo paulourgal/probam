@@ -5,21 +5,23 @@ class Story
   def self.create_from_github_issue(github_issue)
     id = github_issue[:number]
     title = github_issue[:title]
+    velocity = title.nil? || title[/[0-9]+/].nil? ? 0 : title[/[0-9]+/]
     comments = github_issue[:body]
     assignee = github_issue[:assignee] if github_issue[:assignee]
     labels = github_issue[:labels] if github_issue[:labels]
     return nil if id.nil? || title.nil?
-    self.new(id, title, comments, assignee, labels)
+    self.new(id, title, comments, assignee, labels, velocity)
   end
 
-  attr_accessor :id, :comments, :title, :assignee, :labels
+  attr_accessor :id, :comments, :title, :assignee, :labels, :velocity
 
-  def initialize(id, title, comments, assignee, labels)
+  def initialize(id, title, comments, assignee=nil, labels=nil, velocity=nil)
     @id = id
     @title = title
     @comments = comments
     @assignee = assignee
     @labels = labels
+    @velocity = velocity
   end
 
   def labels_to_s
@@ -51,6 +53,7 @@ class Story
     s = "#{id} - #{title}"
     s << " #{labels_to_s}" unless labels_to_s.empty?
     s << " - #{assignee.login}" unless assignee.nil?
+    s << " - #{velocity} velocity" unless velocity.nil? || velocity == 0
     s
   end
 end

@@ -38,7 +38,7 @@ issues.each do |issue|
   story = Story.create_from_github_issue(issue)
   issue[:labels].each do |label|
     result = /priority:\w{4,10}|t:\d{0,2}/.match(label[:name])
-    tags << result.to_a.compact.join(' - ') unless result.nil?
+    tags << result.to_a.compact unless result.nil?
   end
 
   string_of_issues += "[ ] " + tags.join(' - ') + " | " + story.to_s + "\n"

@@ -18,9 +18,9 @@ github_config = config["github"]
 
 github_access_token = github_config["access_token"]
 
-github_project = github_config["projects"]["ancora"]
+github_project = github_config["projects"]["weleto"]
 github_project_repo = github_project["repo"]
-github_project_milestone = github_project["milestone"]["sprint_nine"]
+github_project_milestone = github_project["milestone"]["current_sprint"]
 
 # get issues from github
 
@@ -34,8 +34,14 @@ issues = GetIssuesFromGithub.call(
 string_of_issues = ""
 
 issues.each do |issue|
+  tags = []
   story = Story.create_from_github_issue(issue)
-  string_of_issues += "[ ] " + story.to_s + "\n"
+  issue[:labels].each do |label|
+    result = /priority:\w{4,10}|t:\d{0,2}/.match(label[:name])
+    tags << result.to_a.compact.join(' - ') unless result.nil?
+  end
+
+  string_of_issues += "[ ] " + tags.join(' - ') + " | " + story.to_s + "\n"
 end
 
 puts string_of_issues

@@ -3,7 +3,7 @@ require "story"
 
 describe Story do
 
-  let(:story) { Story.new('723', 'Title', 'Comments') }
+  let(:story) { Story.new('723', 'Title', 'Comments', nil, nil) }
 
   it 'must respond to id' do
     expect(story).to respond_to(:id)
@@ -19,8 +19,8 @@ describe Story do
 
   context '.create_from_github_issue' do
 
-    let(:valid_github_issue) { { number: "123", title: "title", body: "body" } }
-    let(:invalid_github_issue) { { number: nil, title: nil, body: "" } }
+    let(:valid_github_issue) { { number: "123", title: "title", body: "body", labels: nil, assignee: nil } }
+    let(:invalid_github_issue) { { number: nil, title: nil, body: "", labels: nil, assignee: nil } }
 
     it 'must return nil when github_issue is invalid' do
       expect(Story.create_from_github_issue(invalid_github_issue)).to be_nil
@@ -35,7 +35,7 @@ describe Story do
 
   context '#has_comments?' do
     it 'returns false when does not have comments' do
-      story = Story.new('123', 'Title', '')
+      story = Story.new('123', 'Title', '', nil, nil)
       expect(story.has_comments?).to be_falsey
     end
 
@@ -73,7 +73,7 @@ describe Story do
     end
 
     it "returns 'id - title'" do
-      expect(story.to_s).to eq("723 - Title\n")
+      expect(story.to_s).to eq("723 - Title")
     end
   end
 

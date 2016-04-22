@@ -1,26 +1,37 @@
 require 'logan'
 require "services/create_todo_for_basecamp_from_a_issue"
-require 'services/find_basecamp_project'
-require "services/authenticate_on_basecamp"
-require "services/find_basecamp_todo_list"
-require 'services/delete_basecamp_todo'
 
 describe CreateTodoForBasecampFromAIssue do
 
-  let(:config) { YAML.load_file("lib/config.yml") }
-  let(:basecamp_id) { config["basecamp"]["id"] }
-  let(:basecamp_username) { config["basecamp"]["username"] }
-  let(:basecamp_password) { config["basecamp"]["password"] }
-  let(:basecamp) do
-    AuthenticateOnBasecamp.call(
-      basecamp_id, basecamp_username, basecamp_password
-    )
-  end
-  let(:project_name) { config["basecamp"]["projects"]["ancora"]["name"] }
-  let(:project) { FindBasecampProject.call(basecamp, project_name) }
-  let(:todo_list_name) { config["basecamp"]["projects"]["ancora"]["todolist"] }
-  let(:todo_list) { FindBasecampTodoList.call(project, todo_list_name) }
+  class ToDo
 
+    attr_accessor :content
+
+    def initialize(content="")
+      @content = content
+    end
+
+    def create_comment(comment)
+      nil
+    end
+  end
+
+  class ToDoList
+
+    attr_accessor :todos
+
+    def initialize(todo=nil)
+      @todos = []
+      @todos << todo unless todo.nil?
+    end
+
+    def create_todo(todo)
+      ToDo.new
+    end
+
+  end
+
+  let(:todo_list) { ToDoList.new }
   let(:invalid_issue) { { number: nil, title: "title", body: "body" } }
   let(:valid_issue) { { number: "123", title: "title", body: "body" } }
 
@@ -41,10 +52,10 @@ describe CreateTodoForBasecampFromAIssue do
     end
 
     it 'returns nil when issue is already on basecamp' do
+      todo = ToDo.new(valid_issue[:number])
+      todo_list = ToDoList.new(todo)
       expect(CreateTodoForBasecampFromAIssue.call(valid_issue, todo_list))
         .to be_nil
-
-      DeleteBasecampTodo.call(todo_list, valid_issue[:number])
     end
 
   end

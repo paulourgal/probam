@@ -6,6 +6,7 @@ require 'csv'
 require_relative "services/get_issues_from_github"
 require_relative "story"
 
+# all | open | closed
 state = ARGV[0] || "open"
 
 # load configuration file
@@ -18,9 +19,9 @@ github_config = config["github"]
 
 github_access_token = github_config["access_token"]
 
-github_project = github_config["projects"]["ancora"]
+github_project = github_config["projects"]["caiena-survey-web"]
 github_project_repo = github_project["repo"]
-github_project_milestone = github_project["milestone"]["sprint_nine"]
+github_project_milestone = github_project["milestone"]["current"]
 
 # get issues from github
 
@@ -35,7 +36,7 @@ string_of_issues = ""
 
 issues.each do |issue|
   story = Story.create_from_github_issue(issue)
-  string_of_issues += "[ ] " + story.to_s + "\n"
+  string_of_issues += story.to_s + "\n"
 end
 
 puts string_of_issues

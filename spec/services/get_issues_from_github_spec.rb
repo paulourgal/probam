@@ -7,7 +7,7 @@ describe GetIssuesFromGithub do
   let(:config) { YAML.load_file("lib/config.yml") }
   let(:access_token) { config["github"]["access_token"] }
   let(:repo_name) { "caiena/ancora" }
-  let(:milestone_name) { "Backlog" }
+  let(:milestone_name) { "backlog" }
   let(:state) { "all" }
   let(:service) do
     GetIssuesFromGithub.new(access_token, repo_name, milestone_name, state)

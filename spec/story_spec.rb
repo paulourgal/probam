@@ -33,6 +33,34 @@ describe Story do
 
   end
 
+  context '.create_from_basecamp_todo' do
+
+    class BasecampTodo
+
+      attr_accessor :app_url, :content, :id
+
+      def initialize(app_url, content, id)
+        @app_url = app_url
+        @content = content
+        @id = id
+      end
+
+    end
+
+    let(:valid_basecamp_todo) { BasecampTodo.new("URL", "CONTENT", 123) }
+    let(:invalid_basecamp_todo) { BasecampTodo.new("", nil, nil) }
+
+    it 'must return nil when basecamp_todo is invalid' do
+      expect(Story.create_from_basecamp_todo(invalid_basecamp_todo)).to be_nil
+    end
+
+    it 'must return a story when basecamp_todo is valid' do
+      expect(Story.create_from_basecamp_todo(valid_basecamp_todo).id)
+        .to eq(valid_basecamp_todo.id)
+    end
+
+  end
+
   context '#has_comments?' do
     it 'returns false when does not have comments' do
       story = Story.new('123', 'Title', '')
@@ -73,7 +101,7 @@ describe Story do
     end
 
     it "returns 'id - title'" do
-      expect(story.to_s).to eq("723 - Title\n")
+      expect(story.to_s).to eq("723 - Title\nComments\n\n")
     end
   end
 

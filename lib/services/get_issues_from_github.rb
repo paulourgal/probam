@@ -2,14 +2,14 @@ require 'octokit'
 
 class GetIssuesFromGithub
 
-  ISSUES_PER_PAGE = 30
+  ISSUES_PER_PAGE = 60
 
   def self.call(access_token, repo_name, milestone_name, state)
     self.new(access_token, repo_name, milestone_name, state).call
   end
 
   attr_accessor :access_token, :issues, :milestone, :milestone_name,
-                :repo_name, :state
+                :repo_name, :state, :octokit_user
 
   def initialize(access_token, repo_name, milestone_name, state)
     @access_token = access_token
@@ -17,6 +17,7 @@ class GetIssuesFromGithub
     @milestone_name = milestone_name
     @state = state || 'open'
     @issues = []
+    @octokit_user = authenticate
   end
 
   def call
@@ -24,9 +25,9 @@ class GetIssuesFromGithub
 
     return nil if milestone.nil?
 
-    (1..pages(milestone.open_issues)).each do |page|
+    (1..pages(milestone.open_issues + milestone.closed_issues)).each do |page|
 
-       _issues = octokit.issues(
+       _issues = octokit_user.issues(
                    repo_name,
                    milestone: milestone.number, state: @state, page: page
                  )
@@ -47,7 +48,7 @@ class GetIssuesFromGithub
   end
 
   def find_milestone
-    milestones = octokit.list_milestones(repo_name)
+    milestones = octokit_user.list_milestones(repo_name)
     milestones.each do |milestone|
       @milestone = milestone if found_milestone?(milestone)
     end
@@ -59,7 +60,7 @@ class GetIssuesFromGithub
     p
   end
 
-  def octokit
+  def authenticate
     Octokit::Client.new(access_token: access_token)
   end
 

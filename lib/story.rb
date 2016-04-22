@@ -10,6 +10,14 @@ class Story
     self.new(id, title, comments)
   end
 
+  def self.create_from_basecamp_todo(basecamp_todo)
+    id = basecamp_todo.id
+    title = basecamp_todo.content
+    comments = basecamp_todo.app_url
+    return nil if id.nil? || title.nil?
+    self.new(id, title, comments)
+  end
+
   attr_accessor :id, :comments, :title
 
   def initialize(id, title, comments)
@@ -35,7 +43,7 @@ class Story
 
   def to_s
     return "" if id.nil? || title.nil?
-    "#{id} - #{title}\n"
+    "#{id} - #{title}\n#{comments}\n\n"
   end
 
 end

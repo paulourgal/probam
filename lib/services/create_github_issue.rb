@@ -1,10 +1,7 @@
 require 'octokit'
+require 'services/base_service'
 
-class CreateGithubIssue
-
-  def self.call(access_token, repo_name, issue_name, issue_body)
-    self.new(access_token, repo_name, issue_name, issue_body).call
-  end
+class CreateGithubIssue < BaseService
 
   attr_accessor :access_token, :repo_name, :issue, :issue_name,
                 :issue_body, :octokit_user

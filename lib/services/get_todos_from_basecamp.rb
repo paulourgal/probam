@@ -1,8 +1,6 @@
-class GetTodosFromBasecamp
+require 'services/base_service'
 
-  def self.call(basecamp_todo_list)
-    self.new(basecamp_todo_list).call
-  end
+class GetTodosFromBasecamp < BaseService
 
   attr_accessor :basecamp_todo_list
 

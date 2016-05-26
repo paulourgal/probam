@@ -1,3 +1,5 @@
+require 'services/base_service'
+
 class String
   BLANK_RE = /\A[[:space:]]*\z/
 
@@ -18,11 +20,7 @@ class String
   end
 end
 
-class FindBasecampTodoList
-
-  def self.call(basecamp_project, todo_list_name)
-    self.new(basecamp_project, todo_list_name).call
-  end
+class FindBasecampTodoList < BaseService
 
   attr_accessor :basecamp_project, :todo_list_name
 

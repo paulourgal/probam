@@ -1,10 +1,7 @@
 require 'logan'
+require 'services/base_service'
 
-class AuthenticateOnBasecamp
-
-  def self.call(id, username, password)
-    self.new(id, username, password).call
-  end
+class AuthenticateOnBasecamp < BaseService
 
   attr_accessor :basecamp, :id, :password, :username
 

@@ -61,6 +61,52 @@ describe Story do
 
   end
 
+  context "#has_label?(label) when" do
+    context "label is bug returns" do
+      it "false when there is no BUG label" do
+        expect(story.has_label?("bug")).to be_falsey
+      end
+
+      it "true when there is BUG label" do
+        story = Story.new('723', 'Title', 'Comments', [ { name: "bug" } ])
+        expect(story.has_label?("bug")).to be_truthy
+      end
+    end
+
+    context "label is debt returns" do
+      it "false when there is no debt label" do
+        expect(story.has_label?("debt")).to be_falsey
+      end
+
+      it "true when there is debt label" do
+        story = Story.new('723', 'Title', 'Comments', [ { name: "debt" } ])
+        expect(story.has_label?("debt")).to be_truthy
+      end
+    end
+
+    context "label is design returns" do
+      it "false when there is no design label" do
+        expect(story.has_label?("design")).to be_falsey
+      end
+
+      it "true when there is design label" do
+        story = Story.new('723', 'Title', 'Comments', [ { name: "design" } ])
+        expect(story.has_label?("design")).to be_truthy
+      end
+    end
+
+    context "label is duplicated returns" do
+      it "false when there is no duplicated label" do
+        expect(story.has_label?("duplicated")).to be_falsey
+      end
+
+      it "true when there is duplicated label" do
+        story = Story.new('723', 'Title', 'Comments', [ { name: "duplicated" } ])
+        expect(story.has_label?("duplicated")).to be_truthy
+      end
+    end
+  end
+
   context '#has_comments?' do
     it 'returns false when does not have comments' do
       story = Story.new('123', 'Title', '')
@@ -101,7 +147,7 @@ describe Story do
     end
 
     it "returns 'id - title'" do
-      expect(story.to_s).to eq("723 - Title\nComments\n\n")
+      expect(story.to_s).to eq("723 - Title\n")
     end
   end
 

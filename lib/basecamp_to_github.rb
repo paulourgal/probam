@@ -10,6 +10,10 @@ require_relative "services/get_todos_from_basecamp"
 require_relative "services/create_github_issue"
 require_relative "story"
 
+# projetc_name - default is saber
+
+projetc_name = ARGV[0] || "saber"
+
 # load configuration file
 
 config = YAML.load_file("config.yml")
@@ -27,7 +31,7 @@ basecamp_user = AuthenticateOnBasecamp.call(
                          )
 
 # project
-basecamp_project = basecamp_config["projects"]["saber"]
+basecamp_project = basecamp_config["projects"][projetc_name]
 basecamp_project_name = basecamp_project["name"]
 project = FindBasecampProject.call(basecamp_user, basecamp_project_name)
 
@@ -46,7 +50,7 @@ github_config = config["github"]
 
 github_access_token = github_config["access_token"]
 
-github_project = github_config["projects"]["saber"]
+github_project = github_config["projects"][projetc_name]
 github_project_repo = github_project["repo"]
 
 # creating issue from todos

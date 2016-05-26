@@ -5,25 +5,31 @@ class Story
   def self.create_from_github_issue(github_issue)
     id = github_issue[:number]
     title = github_issue[:title]
-    comments = github_issue[:body]
     return nil if id.nil? || title.nil?
-    self.new(id, title, comments)
+    comments = github_issue[:body]
+    labels = github_issue[:labels]
+    self.new(id, title, comments, labels)
   end
 
   def self.create_from_basecamp_todo(basecamp_todo)
     id = basecamp_todo.id
     title = basecamp_todo.content
-    comments = basecamp_todo.app_url
     return nil if id.nil? || title.nil?
+    comments = basecamp_todo.app_url
     self.new(id, title, comments)
   end
 
-  attr_accessor :id, :comments, :title
+  attr_accessor :id, :comments, :labels, :title
 
-  def initialize(id, title, comments)
+  def initialize(id, title, comments, labels=nil)
     @id = id
     @title = title
     @comments = comments
+    @labels = labels
+  end
+
+  def has_label?(label)
+    @labels.any? { |l| l[:name] == label } unless @labels.nil?
   end
 
   def has_comments?
@@ -43,7 +49,7 @@ class Story
 
   def to_s
     return "" if id.nil? || title.nil?
-    "#{id} - #{title}\n#{comments}\n\n"
+    "#{id} - #{title}\n"
   end
 
 end

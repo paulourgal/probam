@@ -1,10 +1,7 @@
 require 'logan'
+require 'services/base_service'
 
-class FindBasecampProject
-
-  def self.call(basecamp, project_name)
-    self.new(basecamp, project_name).call
-  end
+class FindBasecampProject < BaseService
 
   attr_accessor :basecamp, :project_name
 

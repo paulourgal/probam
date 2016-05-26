@@ -1,11 +1,8 @@
 require 'logan'
 require_relative "../story"
+require 'services/base_service'
 
-class CreateTodoForBasecampFromAIssue
-
-  def self.call(github_issue, todo_list)
-    self.new(github_issue, todo_list).call
-  end
+class CreateTodoForBasecampFromAIssue < BaseService
 
   attr_accessor :github_issue, :todo_list, :story
 

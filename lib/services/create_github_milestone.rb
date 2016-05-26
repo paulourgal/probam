@@ -1,10 +1,7 @@
 require 'octokit'
+require 'services/base_service'
 
-class CreateGithubMilestone
-
-  def self.call(access_token, repo_name, milestone_name)
-    self.new(access_token, repo_name, milestone_name).call
-  end
+class CreateGithubMilestone < BaseService
 
   attr_accessor :access_token, :repo_name, :milestone_name,
                 :milestone, :octokit_user

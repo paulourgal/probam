@@ -1,12 +1,9 @@
 require 'octokit'
+require 'services/base_service'
 
-class GetIssuesFromGithub
+class GetIssuesFromGithub < BaseService
 
-  ISSUES_PER_PAGE = 60
-
-  def self.call(access_token, repo_name, milestone_name, state)
-    self.new(access_token, repo_name, milestone_name, state).call
-  end
+  ISSUES_PER_PAGE = 30
 
   attr_accessor :access_token, :issues, :milestone, :milestone_name,
                 :repo_name, :state, :octokit_user

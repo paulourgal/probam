@@ -1,10 +1,7 @@
 require 'logan'
+require 'services/base_service'
 
-class DeleteBasecampTodo
-
-  def self.call(todo_list, todo_id)
-    self.new(todo_list, todo_id).call
-  end
+class DeleteBasecampTodo < BaseService
 
   attr_accessor :todo_list, :todo_id, :todo
 

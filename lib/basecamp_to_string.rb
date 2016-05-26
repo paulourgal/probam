@@ -6,8 +6,11 @@ require 'logan'
 require_relative 'services/basecamp/find_basecamp_project'
 require_relative "services/basecamp/authenticate_on_basecamp"
 require_relative "services/basecamp/find_basecamp_todo_list"
-require_relative "services/basecamp/get_todos_from_basecamp"
 require_relative "story"
+
+# projetc_name - default is saber
+
+projetc_name = ARGV[0] || "saber"
 
 # load configuration file
 
@@ -26,7 +29,7 @@ basecamp_user = AuthenticateOnBasecamp.call(
                          )
 
 # project
-basecamp_project = basecamp_config["projects"]["ancora"]
+basecamp_project = basecamp_config["projects"][projetc_name]
 basecamp_project_name = basecamp_project["name"]
 project = FindBasecampProject.call(basecamp_user, basecamp_project_name)
 

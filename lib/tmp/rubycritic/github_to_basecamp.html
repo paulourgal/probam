@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RubyCritic</title>
+    <link href="assets/stylesheets/application.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/prettify.custom_theme.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="project-header group">
+      <div class="container">
+        <h1 class="logo"><a href="overview.html" class="logo-link">RubyCritic</a></h1>
+        <nav class="project-nav">
+          <a href="overview.html" class="project-nav-item">Overview</a>
+          <a href="code_index.html" class="project-nav-item">Code</a>
+          <a href="smells_index.html" class="project-nav-item">Smells</a>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <div class="file-header group rated">
+  <span class="rating rating-a circled-text circle">
+    A
+  </span>
+  <h2 class="file-name">GithubToBasecamp</h2>
+
+  <span class="file-committed-at">
+    
+      Updated <time class='js-timeago' datetime='2015-09-28 18:46:44 -0300'>2015-09-28 18:46:44 -0300</time>
+    
+  </span>
+
+  <div class="file-stats group">
+    <div class="file-stat">
+      0 complexity
+    </div>
+    <div class="file-stat">
+      N/A complexity per method
+    </div>
+    <div class="file-stat">
+      1 churn
+    </div>
+    <div class="file-stat">
+      0 methods
+    </div>
+    <div class="file-stat">
+      0 duplication
+    </div>
+  </div>
+
+  
+</div>
+
+<code class="prettyprint linenums lang-ruby file-code js-file-code">#!/usr/bin/env ruby
+
+require &quot;rubygems&quot;
+require &#39;yaml&#39;
+require_relative &quot;services/github/authenticate_on_github&quot;
+require_relative &quot;services/github/get_issues_from_github&quot;
+require_relative &quot;services/basecamp/authenticate_on_basecamp&quot;
+require_relative &quot;services/basecamp/find_basecamp_project&quot;
+require_relative &quot;services/basecamp/find_basecamp_todo_list&quot;
+require_relative &quot;services/basecamp/create_todo_for_basecamp_from_a_issue&quot;
+require_relative &quot;story&quot;
+
+state = ARGV[0] || &quot;open&quot;
+
+# load configuration file
+
+config = YAML.load_file(&quot;config.yml&quot;)
+
+# reading configurations for github
+
+github_config = config[&quot;github&quot;]
+
+github_access_token = github_config[&quot;access_token&quot;]
+octokit_client = AuthenticateOnGithub.call(github_access_token)
+
+github_project = github_config[&quot;projects&quot;][&quot;ancora&quot;]
+github_project_repo = github_project[&quot;repo&quot;]
+github_project_milestone = github_project[&quot;milestone&quot;][&quot;backlog&quot;]
+milestone = FindMilestone.call(github_project_milestone, octokit_client, github_project_repo)
+
+# get issues from github
+
+issues = GetIssuesFromGithub.call(milestone, octokit_client, github_project_repo, state)
+
+# reading configurations for basecamp
+
+basecamp_config = config[&quot;basecamp&quot;]
+
+basecamp_id = basecamp_config[&quot;id&quot;]
+basecamp_username = basecamp_config[&quot;username&quot;]
+basecamp_password = basecamp_config[&quot;password&quot;]
+
+basecamp_project = basecamp_config[&quot;projects&quot;][&quot;ancora&quot;]
+basecamp_project_name = basecamp_project[&quot;name&quot;]
+basecamp_project_todolist = basecamp_project[&quot;todolist&quot;]
+
+# authenticating on basecamp
+
+basecamp = AuthenticateOnBasecamp.call(basecamp_id, basecamp_username, basecamp_password)
+
+basecamp_project = FindBasecampProject.call(basecamp, basecamp_project_name)
+
+basecamp_todolist = FindBasecampTodoList.call(basecamp_project, basecamp_project_todolist)
+
+# adding issues to basecamp
+
+issues.each do |issue|
+  story = CreateTodoForBasecampFromAIssue.call(issue, basecamp_todolist)
+  puts story.to_s unless story.nil?
+end
+
+</code>
+
+    </div>
+    <script src='assets/javascripts/jquery-2.1.0.js'></script>
+    <script src='assets/javascripts/jquery.tablesorter.js'></script>
+    <script src='assets/javascripts/jquery.floatThead-v1.2.7.js'></script>
+    <script src='assets/javascripts/jquery.timeago-v1.4.1.js'></script>
+    <script src='assets/javascripts/highcharts.src-4.0.1.js'></script>
+    <script src='assets/javascripts/jquery.scrollTo-1.4.11.js'></script>
+    <script src='assets/javascripts/prettify-4-Mar-2013.js'></script>
+    <script src='assets/javascripts/application.js'></script>
+  </body>
+</html>

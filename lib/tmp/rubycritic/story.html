@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RubyCritic</title>
+    <link href="assets/stylesheets/application.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/prettify.custom_theme.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="project-header group">
+      <div class="container">
+        <h1 class="logo"><a href="overview.html" class="logo-link">RubyCritic</a></h1>
+        <nav class="project-nav">
+          <a href="overview.html" class="project-nav-item">Overview</a>
+          <a href="code_index.html" class="project-nav-item">Code</a>
+          <a href="smells_index.html" class="project-nav-item">Smells</a>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <div class="file-header group rated">
+  <span class="rating rating-a circled-text circle">
+    A
+  </span>
+  <h2 class="file-name">Story</h2>
+
+  <span class="file-committed-at">
+    
+      Updated <time class='js-timeago' datetime='2016-05-26 07:41:07 -0300'>2016-05-26 07:41:07 -0300</time>
+    
+  </span>
+
+  <div class="file-stats group">
+    <div class="file-stat">
+      64 complexity
+    </div>
+    <div class="file-stat">
+      8.0 complexity per method
+    </div>
+    <div class="file-stat">
+      3 churn
+    </div>
+    <div class="file-stat">
+      8 methods
+    </div>
+    <div class="file-stat">
+      0 duplication
+    </div>
+  </div>
+
+  
+    <button id="js-toggle-smells" class="smells-toggle-button button">Toggle Smells</button>
+  
+</div>
+
+<code class="prettyprint linenums lang-ruby file-code js-file-code">require &#39;logan&#39;
+
+class Story<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Irresponsible-Module.md" target="_blank">IrresponsibleModule</a>)      Story has no descriptive comment          </span>  </li></ul>
+
+  def self.create_from_github_issue(github_issue)<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Too-Many-Statements.md" target="_blank">TooManyStatements</a>)      Story#self.create_from_github_issue has approx 6 statements          </span>  </li></ul>
+    id = github_issue[:number]
+    title = github_issue[:title]
+    return nil if id.nil? || title.nil?<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#self.create_from_github_issue performs a nil-check          </span>  </li></ul>
+    comments = github_issue[:body]
+    labels = github_issue[:labels]
+    self.new(id, title, comments, labels)
+  end
+
+  def self.create_from_basecamp_todo(basecamp_todo)
+    id = basecamp_todo.id
+    title = basecamp_todo.content
+    return nil if id.nil? || title.nil?<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#self.create_from_basecamp_todo performs a nil-check          </span>  </li></ul>
+    comments = basecamp_todo.app_url
+    self.new(id, title, comments)
+  end
+
+  attr_accessor :id, :comments, :labels, :title<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Attribute.md" target="_blank">Attribute</a>)      Story#comments is a writable attribute          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Attribute.md" target="_blank">Attribute</a>)      Story#id is a writable attribute          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Attribute.md" target="_blank">Attribute</a>)      Story#labels is a writable attribute          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Attribute.md" target="_blank">Attribute</a>)      Story#title is a writable attribute          </span>  </li></ul>
+
+  def initialize(id, title, comments, labels=nil)
+    @id = id
+    @title = title
+    @comments = comments
+    @labels = labels
+  end
+
+  def has_label?(label)
+    @labels.any? { |l| l[:name] == label } unless @labels.nil?<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#has_label? performs a nil-check          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Uncommunicative-Variable-Name.md" target="_blank">UncommunicativeVariableName</a>)      Story#has_label? has the variable name 'l'          </span>  </li></ul>
+  end
+
+  def has_comments?
+    (!comments.nil? &amp;&amp; comments.strip != &quot;&quot;)<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#has_comments? performs a nil-check          </span>  </li></ul>
+  end
+
+  def to_basecamp_todo
+    return nil if id.nil? || title.nil?<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#to_basecamp_todo performs a nil-check          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Repeated-Conditional.md" target="_blank">RepeatedConditional</a>)      Story tests id.nil? || title.nil? at least 3 times                        <a href="story.html#L40" class="js-smell-location">0</a>                  <a href="story.html#L46" class="js-smell-location">1</a>                  <a href="story.html#L51" class="js-smell-location">2</a>                  </span>  </li></ul>
+    todo = Logan::Todo.new(id: id, content: &quot;#{id} - #{title}&quot;)
+    todo
+  end
+
+  def to_csv
+    return [&#39;&#39;] if id.nil? || title.nil?<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#to_csv performs a nil-check          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Repeated-Conditional.md" target="_blank">RepeatedConditional</a>)      Story tests id.nil? || title.nil? at least 3 times                        <a href="story.html#L40" class="js-smell-location">0</a>                  <a href="story.html#L46" class="js-smell-location">1</a>                  <a href="story.html#L51" class="js-smell-location">2</a>                  </span>  </li></ul>
+    [id,title,comments]
+  end
+
+  def to_s
+    return &quot;&quot; if id.nil? || title.nil?<ul class="nocode smells js-smells">  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Nil-Check.md" target="_blank">NilCheck</a>)      Story#to_s performs a nil-check          </span>  </li>  <li class="smell ">    <span class="description">      (<a href="https://github.com/troessner/reek/blob/master/docs/Repeated-Conditional.md" target="_blank">RepeatedConditional</a>)      Story tests id.nil? || title.nil? at least 3 times                        <a href="story.html#L40" class="js-smell-location">0</a>                  <a href="story.html#L46" class="js-smell-location">1</a>                  <a href="story.html#L51" class="js-smell-location">2</a>                  </span>  </li></ul>
+    &quot;#{id} - #{title}\n&quot;
+  end
+
+end
+</code>
+
+    </div>
+    <script src='assets/javascripts/jquery-2.1.0.js'></script>
+    <script src='assets/javascripts/jquery.tablesorter.js'></script>
+    <script src='assets/javascripts/jquery.floatThead-v1.2.7.js'></script>
+    <script src='assets/javascripts/jquery.timeago-v1.4.1.js'></script>
+    <script src='assets/javascripts/highcharts.src-4.0.1.js'></script>
+    <script src='assets/javascripts/jquery.scrollTo-1.4.11.js'></script>
+    <script src='assets/javascripts/prettify-4-Mar-2013.js'></script>
+    <script src='assets/javascripts/application.js'></script>
+  </body>
+</html>

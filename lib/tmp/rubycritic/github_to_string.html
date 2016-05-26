@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RubyCritic</title>
+    <link href="assets/stylesheets/application.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/prettify.custom_theme.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="project-header group">
+      <div class="container">
+        <h1 class="logo"><a href="overview.html" class="logo-link">RubyCritic</a></h1>
+        <nav class="project-nav">
+          <a href="overview.html" class="project-nav-item">Overview</a>
+          <a href="code_index.html" class="project-nav-item">Code</a>
+          <a href="smells_index.html" class="project-nav-item">Smells</a>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <div class="file-header group rated">
+  <span class="rating rating-a circled-text circle">
+    A
+  </span>
+  <h2 class="file-name">GithubToString</h2>
+
+  <span class="file-committed-at">
+    
+      Updated <time class='js-timeago' datetime='2016-05-26 07:41:07 -0300'>2016-05-26 07:41:07 -0300</time>
+    
+  </span>
+
+  <div class="file-stats group">
+    <div class="file-stat">
+      0 complexity
+    </div>
+    <div class="file-stat">
+      N/A complexity per method
+    </div>
+    <div class="file-stat">
+      3 churn
+    </div>
+    <div class="file-stat">
+      0 methods
+    </div>
+    <div class="file-stat">
+      0 duplication
+    </div>
+  </div>
+
+  
+</div>
+
+<code class="prettyprint linenums lang-ruby file-code js-file-code">#!/usr/bin/env ruby
+
+require &quot;rubygems&quot;
+require &#39;yaml&#39;
+require_relative &quot;services/github/authenticate_on_github&quot;
+require_relative &quot;services/github/find_milestone&quot;
+require_relative &quot;services/github/get_issues_from_github&quot;
+require_relative &quot;story&quot;
+
+# all | open | closed
+state = ARGV[0] || &quot;open&quot;
+
+# projetc_name - default is caiena-survey-web
+
+projetc_name = ARGV[1] || &quot;caiena-survey-web&quot;
+
+# load configuration file
+
+config = YAML.load_file(&quot;config.yml&quot;)
+
+# reading configurations for github
+
+github_config = config[&quot;github&quot;]
+
+github_access_token = github_config[&quot;access_token&quot;]
+octokit_client = AuthenticateOnGithub.call(github_access_token)
+
+github_project = github_config[&quot;projects&quot;][projetc_name]
+github_project_repo = github_project[&quot;repo&quot;]
+github_project_milestone = github_project[&quot;milestone&quot;][&quot;current&quot;]
+milestone = FindMilestone.call(github_project_milestone, octokit_client, github_project_repo)
+
+# get issues from github
+
+issues = GetIssuesFromGithub.call(milestone, octokit_client, github_project_repo, state)
+
+
+# creating string of issues
+
+string_of_issues = &quot;&quot;
+
+issues.each do |issue|
+  story = Story.create_from_github_issue(issue)
+  string_of_issues += &quot;[BUG] &quot; if story.has_label?(&quot;bug&quot;)
+  string_of_issues += &quot;[DEBT] &quot; if story.has_label?(&quot;debt&quot;)
+  string_of_issues += &quot;[DESIGN] &quot; if story.has_label?(&quot;design&quot;)
+  string_of_issues += &quot;[ANDROID] &quot; if story.has_label?(&quot;android&quot;)
+  string_of_issues += story.to_s + &quot;\n&quot; + story.comments + &quot;\n\n&quot; unless story.has_label?(&quot;duplicated&quot;)
+end
+
+puts string_of_issues
+
+
+
+</code>
+
+    </div>
+    <script src='assets/javascripts/jquery-2.1.0.js'></script>
+    <script src='assets/javascripts/jquery.tablesorter.js'></script>
+    <script src='assets/javascripts/jquery.floatThead-v1.2.7.js'></script>
+    <script src='assets/javascripts/jquery.timeago-v1.4.1.js'></script>
+    <script src='assets/javascripts/highcharts.src-4.0.1.js'></script>
+    <script src='assets/javascripts/jquery.scrollTo-1.4.11.js'></script>
+    <script src='assets/javascripts/prettify-4-Mar-2013.js'></script>
+    <script src='assets/javascripts/application.js'></script>
+  </body>
+</html>

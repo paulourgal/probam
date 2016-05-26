@@ -1,6 +1,6 @@
 require 'octokit'
-require 'services/base_service'
-require 'services/github/find_milestone'
+require_relative '../base_service'
+require_relative 'find_milestone'
 
 class CreateGithubMilestone < BaseService
 

@@ -2,11 +2,12 @@
 
 require "rubygems"
 require 'yaml'
-require_relative "services/get_issues_from_github"
-require_relative "services/authenticate_on_basecamp"
-require_relative "services/find_basecamp_project"
-require_relative "services/find_basecamp_todo_list"
-require_relative "services/create_todo_for_basecamp_from_a_issue"
+require_relative "services/github/authenticate_on_github"
+require_relative "services/github/get_issues_from_github"
+require_relative "services/basecamp/authenticate_on_basecamp"
+require_relative "services/basecamp/find_basecamp_project"
+require_relative "services/basecamp/find_basecamp_todo_list"
+require_relative "services/basecamp/create_todo_for_basecamp_from_a_issue"
 require_relative "story"
 
 state = ARGV[0] || "open"
@@ -20,16 +21,16 @@ config = YAML.load_file("config.yml")
 github_config = config["github"]
 
 github_access_token = github_config["access_token"]
+octokit_client = AuthenticateOnGithub.call(github_access_token)
 
 github_project = github_config["projects"]["ancora"]
 github_project_repo = github_project["repo"]
 github_project_milestone = github_project["milestone"]["backlog"]
+milestone = FindMilestone.call(github_project_milestone, octokit_client, github_project_repo)
 
 # get issues from github
 
-issues = GetIssuesFromGithub.call(
-  github_access_token, github_project_repo, github_project_milestone, state
-)
+issues = GetIssuesFromGithub.call(milestone, octokit_client, github_project_repo, state)
 
 # reading configurations for basecamp
 
@@ -45,15 +46,11 @@ basecamp_project_todolist = basecamp_project["todolist"]
 
 # authenticating on basecamp
 
-basecamp = AuthenticateOnBasecamp.call(
-  basecamp_id, basecamp_username, basecamp_password
-)
+basecamp = AuthenticateOnBasecamp.call(basecamp_id, basecamp_username, basecamp_password)
 
 basecamp_project = FindBasecampProject.call(basecamp, basecamp_project_name)
 
-basecamp_todolist = FindBasecampTodoList.call(
-  basecamp_project, basecamp_project_todolist
-)
+basecamp_todolist = FindBasecampTodoList.call(basecamp_project, basecamp_project_todolist)
 
 # adding issues to basecamp
 

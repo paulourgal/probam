@@ -3,11 +3,11 @@
 require "rubygems"
 require 'yaml'
 require 'logan'
-require_relative 'services/find_basecamp_project'
-require_relative "services/authenticate_on_basecamp"
-require_relative "services/find_basecamp_todo_list"
-require_relative "services/get_todos_from_basecamp"
-require_relative "services/create_github_issue"
+require_relative 'services/basecamp/find_basecamp_project'
+require_relative "services/basecamp/authenticate_on_basecamp"
+require_relative "services/basecamp/find_basecamp_todo_list"
+require_relative "services/github/authenticate_on_github"
+require_relative "services/github/create_github_issue"
 require_relative "story"
 
 # projetc_name - default is saber
@@ -49,6 +49,7 @@ todos = todo_list.todos || []
 github_config = config["github"]
 
 github_access_token = github_config["access_token"]
+octokit_client = AuthenticateOnGithub.call(github_access_token)
 
 github_project = github_config["projects"][projetc_name]
 github_project_repo = github_project["repo"]
@@ -56,7 +57,5 @@ github_project_repo = github_project["repo"]
 # creating issue from todos
 
 todos.each do |todo|
-  CreateGithubIssue.call(
-    github_access_token, github_project_repo, todo.content, todo.app_url
-  )
+  CreateGithubIssue.call(octokit_client, github_project_repo, todo.content, todo.app_url)
 end

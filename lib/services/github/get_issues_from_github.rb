@@ -1,5 +1,5 @@
 require 'octokit'
-require 'services/base_service'
+require_relative '../base_service'
 
 class GetIssuesFromGithub < BaseService
 

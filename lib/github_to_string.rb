@@ -2,15 +2,10 @@
 
 require "rubygems"
 require 'yaml'
-require 'csv'
-require_relative "services/get_issues_from_github"
+require_relative "services/github/authenticate_on_github"
+require_relative "services/github/find_milestone"
+require_relative "services/github/get_issues_from_github"
 require_relative "story"
-
-# privates
-
-def has_label?(labels, label)
-  labels.any? { |l| l[:name] == label } unless labels.nil?
-end
 
 # all | open | closed
 state = ARGV[0] || "open"
@@ -28,16 +23,16 @@ config = YAML.load_file("config.yml")
 github_config = config["github"]
 
 github_access_token = github_config["access_token"]
+octokit_client = AuthenticateOnGithub.call(github_access_token)
 
 github_project = github_config["projects"][projetc_name]
 github_project_repo = github_project["repo"]
 github_project_milestone = github_project["milestone"]["current"]
+milestone = FindMilestone.call(github_project_milestone, octokit_client, github_project_repo)
 
 # get issues from github
 
-issues = GetIssuesFromGithub.call(
-  github_access_token, github_project_repo, github_project_milestone, state
-)
+issues = GetIssuesFromGithub.call(milestone, octokit_client, github_project_repo, state)
 
 
 # creating string of issues
@@ -45,15 +40,12 @@ issues = GetIssuesFromGithub.call(
 string_of_issues = ""
 
 issues.each do |issue|
-  if issue[:number] >= 73
-    labels =
-    story = Story.create_from_github_issue(issue)
-    string_of_issues += "[BUG] " if story.has_label?("bug")
-    string_of_issues += "[DEBT] " if story.has_label?("debt")
-    string_of_issues += "[DESIGN] " if story.has_label?("design")
-    string_of_issues += "[ANDROID] " if has_label?(story.labels, "android")
-    string_of_issues += story.to_s + "\n" + story.comments + "\n\n" unless story.has_label?("duplicated")
-  end
+  story = Story.create_from_github_issue(issue)
+  string_of_issues += "[BUG] " if story.has_label?("bug")
+  string_of_issues += "[DEBT] " if story.has_label?("debt")
+  string_of_issues += "[DESIGN] " if story.has_label?("design")
+  string_of_issues += "[ANDROID] " if story.has_label?("android")
+  string_of_issues += story.to_s + "\n" + story.comments + "\n\n" unless story.has_label?("duplicated")
 end
 
 puts string_of_issues

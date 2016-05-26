@@ -11,7 +11,7 @@ class FindBasecampProject < BaseService
   end
 
   def call
-    basecamp.projects.select { |project| project.name.eql?(project_name) }.first
+    basecamp.projects.find { |project| project.name.eql?(project_name) }
   end
 
 end

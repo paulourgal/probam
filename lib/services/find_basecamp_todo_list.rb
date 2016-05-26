@@ -30,9 +30,7 @@ class FindBasecampTodoList < BaseService
   end
 
   def call
-    basecamp_project.todolists.select do |todolists|
-      todolists.name.eql?(todo_list_name)
-    end.first
+    basecamp_project.todolists.find { |todolists| todolists.name.eql?(todo_list_name) }
   end
 
 end

@@ -1,5 +1,5 @@
 require 'logan'
-require 'services/base_service'
+require_relative '../base_service'
 
 class AuthenticateOnBasecamp < BaseService
 

@@ -1,4 +1,4 @@
-require 'services/base_service'
+require_relative '../base_service'
 
 class String
   BLANK_RE = /\A[[:space:]]*\z/

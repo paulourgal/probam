@@ -1,20 +1,20 @@
 github:
+  # Access token gerado em https://github.com/settings/tokens
   access_token: "TOKEN"
 
   projects:
     ancora:
-      repo: "repo_name"
-      milestone:
+      repo: "repo_name" # user/#{projeto}
+      milestone: # String de identificação dos milestones disponíveis
         backlog: "Backlog"
-        sprint_nine: "Sprint 09"
+        current: "Sprint 09"
 
 basecamp:
-  id: "ID_NUMBER"
-  username: "user@caiena.net"
-  password: "S3CR37"
+  id: "ID_NUMBER" # ID no Basecamp
+  username: "user@example.net" # E-mail de autenticação do Basecamp
+  password: "S3CR37" # Senha do Basecamp
 
   projects:
-    ancora:
-      name: "Âncora"
-      todolist: "Product Backlog"
-
+    project:
+      name: "PROJECT" # Nome do Projeto
+      todolist: "Product Backlog" # Nome da Lista para exportação

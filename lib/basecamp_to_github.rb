@@ -41,7 +41,7 @@ basecamp_project_todo_list = basecamp_project["todolist"]
 todo_list = FindBasecampTodoList.call(project, basecamp_project_todo_list)
 
 # get todos from basecamp
-todos = GetTodosFromBasecamp.call(todo_list)
+todos = todo_list.todos || []
 
 
 # reading configurations for github

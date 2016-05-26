@@ -3,10 +3,10 @@
 require "rubygems"
 require 'yaml'
 require 'logan'
-require_relative 'services/find_basecamp_project'
-require_relative "services/authenticate_on_basecamp"
-require_relative "services/find_basecamp_todo_list"
-require_relative "services/get_todos_from_basecamp"
+require_relative 'services/basecamp/find_basecamp_project'
+require_relative "services/basecamp/authenticate_on_basecamp"
+require_relative "services/basecamp/find_basecamp_todo_list"
+require_relative "services/basecamp/get_todos_from_basecamp"
 require_relative "story"
 
 # load configuration file
@@ -36,7 +36,7 @@ basecamp_project_todo_list = basecamp_project["todolist"]
 todo_list = FindBasecampTodoList.call(project, basecamp_project_todo_list)
 
 # get todos from basecamp
-todos = GetTodosFromBasecamp.call(todo_list)
+todos = todo_list.todos || []
 
 
 # creating string of todos

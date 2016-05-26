@@ -1,6 +1,6 @@
 require 'logan'
-require_relative "../story"
-require 'services/base_service'
+require_relative "../../story"
+require_relative '../base_service'
 
 class CreateTodoForBasecampFromAIssue < BaseService
 
@@ -14,11 +14,14 @@ class CreateTodoForBasecampFromAIssue < BaseService
 
   def call
     return nil if story.nil? || already_exist?
+
     todo = todo_list.create_todo(story.to_basecamp_todo)
+
     if story.has_comments?
       comment = Logan::Comment.new(content: story.comments)
       todo.create_comment(comment)
     end
+
     story
   end
 
